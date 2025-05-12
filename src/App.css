@@ -10,12 +10,12 @@
 }
 
 .color-navbar {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #0093E9 !important;
+  background-image: linear-gradient(90deg, #0093E9 0%, #80D0C7 100%);
 }
 
 .color-texto-marca {
-  color: #1e3c72 !important;
+  color: #1e3d87 !important;
 }
 
 /* Estilos para el formulario de login */
@@ -70,7 +70,11 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #1e3c72aa);
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
@@ -97,4 +101,336 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Estilos para TarjetaProducto */
+.producto-card {
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+.producto-card:hover {
+  transform: translateY(-5px);
+}
+
+.imagen-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.producto-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.producto-card:hover .producto-imagen {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.producto-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.producto-card:hover .overlay-content {
+  transform: translateY(0);
+}
+
+.precio {
+  display: inline-block;
+  background-color: #0093E9;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Estilos para el Modal de Registro de Producto */
+.modal-registro-producto .modal-content {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-registro-producto .modal-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.modal-registro-producto .modal-body {
+  padding: 1.5rem;
+}
+
+.modal-registro-producto .modal-footer {
+  padding: 1.5rem;
+}
+
+.modal-registro-producto .form-control,
+.modal-registro-producto .form-select,
+.modal-registro-producto .input-group-text {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border-color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.modal-registro-producto .form-control:focus,
+.modal-registro-producto .form-select:focus {
+  border-color: #0093E9;
+  box-shadow: 0 0 0 0.2rem rgba(0, 147, 233, 0.25);
+}
+
+.modal-registro-producto .input-group-text {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+.modal-registro-producto .preview-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+}
+
+.modal-registro-producto .preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-registro-producto .preview-remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  background-color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-registro-producto .preview-remove-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-registro-producto .btn-primary {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.modal-registro-producto .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 147, 233, 0.3);
+}
+
+.modal-registro-producto .btn-light {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.modal-registro-producto .btn-light:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+/* Estilos para animaciones de eliminación */
+.modal-eliminacion .modal-content {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.modal-eliminacion .modal-body {
+  padding: 2rem;
+}
+
+.animacion-eliminacion {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  background-color: #dc3545;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 1.5s infinite;
+}
+
+.animacion-eliminacion i {
+  font-size: 2rem;
+  color: white;
+  animation: shake 0.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 20px rgba(220, 53, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+/* Estilos para animación de guardado */
+.animacion-guardado {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  background-color: #0093E9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseGuardado 1.5s infinite;
+}
+
+.animacion-guardado i {
+  font-size: 2rem;
+  color: white;
+  animation: bounce 0.5s infinite;
+}
+
+@keyframes pulseGuardado {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 147, 233, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 20px rgba(0, 147, 233, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 147, 233, 0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Estilos para animación de fade out */
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Animaciones para modales */
+.modal-registro .modal-content,
+.modal-eliminacion .modal-content {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.animacion-registro,
+.animacion-eliminacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #f8f9fa;
+  animation: pulse 1.5s infinite;
+}
+
+.animacion-registro i {
+  font-size: 2.5rem;
+  color: #28a745;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.animacion-eliminacion i {
+  font-size: 2.5rem;
+  color: #dc3545;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

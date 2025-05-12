@@ -2,38 +2,44 @@ import React from "react";
 import { Table, Button } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const TablaCategorias = ({ categorias, openEditModal, openDeleteModal }) => {
-  if (!categorias || categorias.length === 0) {
-    return <p>No hay categorías disponibles.</p>;
-  }
-
+const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
   return (
     <Table striped bordered hover responsive>
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Descripción</th>
+          <th>Autor</th>
+          <th>Género</th>
+          <th>PDF</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {categorias.map((categoria) => (
-          <tr key={categoria.id}>
-            <td>{categoria.nombreCategoria}</td>
-            <td>{categoria.descripcionCategoria}</td>
+        {libros.map((libro) => (
+          <tr key={libro.id}>
+            <td>{libro.nombre}</td>
+            <td>{libro.autor}</td>
+            <td>{libro.genero}</td>
+            <td>
+              {libro.pdfUrl && (
+                <a href={libro.pdfUrl} target="_blank" rel="noopener noreferrer">
+                  Ver PDF
+                </a>
+              )}
+            </td>
             <td>
               <Button
                 variant="outline-warning"
                 size="sm"
                 className="me-2"
-                onClick={() => openEditModal(categoria)}
+                onClick={() => openEditModal(libro)}
               >
                 <i className="bi bi-pencil"></i>
               </Button>
               <Button
                 variant="outline-danger"
                 size="sm"
-                onClick={() => openDeleteModal(categoria)}
+                onClick={() => openDeleteModal(libro)}
               >
                 <i className="bi bi-trash"></i>
               </Button>
@@ -45,4 +51,4 @@ const TablaCategorias = ({ categorias, openEditModal, openDeleteModal }) => {
   );
 };
 
-export default TablaCategorias;
+export default TablaLibros;

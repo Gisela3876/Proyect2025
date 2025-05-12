@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Container, Row, Form, Col } from "react-bootstrap";
 import { db } from "../../assets/database/firebaseconfig";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
@@ -15,7 +15,7 @@ const Catalogo = () => {
   const productosCollection = collection(db, "productos");
   const categoriasCollection = collection(db, "categorias");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       // Obtener productos
       const productosData = await getDocs(productosCollection);
@@ -35,11 +35,11 @@ const Catalogo = () => {
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
-  };
+  }, [productosCollection, categoriasCollection]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Función para abrir el modal de edición
   const openEditModal = (producto) => {
@@ -58,15 +58,17 @@ const Catalogo = () => {
   const handleEditProducto = async () => {
     if (!productoEditado.nombreProducto || !productoEditado.precio || !productoEditado.categoria) {
       alert("Por favor, completa todos los campos requeridos.");
-      return;
+      return Promise.reject("Campos incompletos");
     }
     try {
       const productoRef = doc(db, "productos", productoEditado.id);
       await updateDoc(productoRef, productoEditado);
-      setShowEditModal(false);
       await fetchData();
+      setShowEditModal(false);
+      return Promise.resolve();
     } catch (error) {
       console.error("Error al actualizar producto:", error);
+      return Promise.reject(error);
     }
   };
 
@@ -83,14 +85,33 @@ const Catalogo = () => {
       <Row>
         <Col lg={3} md={3} sm={6}>
           <Form.Group className="mb-3">
-            <Form.Label>Filtrar por categoría:</Form.Label>
+            <Form.Label className="fw-semibold">
+              <i className="bi bi-funnel me-2"></i>
+              Filtrar por categoría:
+            </Form.Label>
             <Form.Select
               value={categoriaSeleccionada}
               onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+              className="form-select-lg"
+              style={{
+                backgroundColor: '#fff',
+                color: '#212529',
+                borderColor: '#dee2e6',
+                cursor: 'pointer',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid #dee2e6',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                transition: 'all 0.2s ease-in-out'
+              }}
             >
-              <option value="Todas">Todas</option>
+              <option value="Todas" className="text-dark">Todas las categorías</option>
               {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.nombreCategoria}>
+                <option 
+                  key={categoria.id} 
+                  value={categoria.nombreCategoria}
+                  className="text-dark"
+                >
                   {categoria.nombreCategoria}
                 </option>
               ))}
@@ -110,7 +131,10 @@ const Catalogo = () => {
             />
           ))
         ) : (
-          <p>No hay productos en esta categoría.</p>
+          <div className="text-center py-5">
+            <i className="bi bi-search display-4 text-muted mb-3"></i>
+            <p className="text-muted">No hay productos en esta categoría.</p>
+          </div>
         )}
       </Row>
 

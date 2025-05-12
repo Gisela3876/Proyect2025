@@ -3,6 +3,15 @@ import { Table, Button } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
+  if (!productos || productos.length === 0) {
+    return (
+      <div className="text-center py-4">
+        <i className="bi bi-inbox display-4 text-muted"></i>
+        <p className="text-muted mt-2">No hay productos disponibles.</p>
+      </div>
+    );
+  }
+
   return (
     <Table striped bordered hover responsive>
       <thead>
@@ -19,10 +28,10 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
           <tr key={producto.id}>
             <td>
               {producto.imagen && (
-                <img 
-                  src={producto.imagen} 
+                <img
+                  src={producto.imagen}
                   alt={producto.nombreProducto}
-                  style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
                 />
               )}
             </td>
@@ -53,4 +62,4 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
   );
 };
 
-export default TablaProductos; 
+export default TablaProductos;

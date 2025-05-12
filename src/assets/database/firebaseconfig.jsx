@@ -1,7 +1,8 @@
-// Import the functions you need from the SDKs you need
+// Importa las funciones necesarias de Firebase
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // Configuración de Firebase usando variables de entorno
 const firebaseConfig = {
@@ -17,10 +18,28 @@ const firebaseConfig = {
 // Inicializa Firebase
 const appfirebase = initializeApp(firebaseConfig);
 
+// Inicializa Storage
+const storage = getStorage(appfirebase);
+
+// Inicializa Auth
+const auth = getAuth(appfirebase);
+
 // Inicializa Firestore
 const db = getFirestore(appfirebase);
 
-// Inicializa Authentication
-const auth = getAuth(appfirebase);
+// Habilitar la persistencia de IndexedDB en Firestore
+enableIndexedDbPersistence(db)
+  .then(() => {
+    console.log("Persistencia de IndexedDB habilitada.");
+  })
+  .catch((err) => {
+    if (err.code === "failed-precondition") {
+      console.warn("La persistencia solo está disponible en una pestaña a la vez.");
+    } else if (err.code === "unimplemented") {
+      console.warn("El navegador no soporta persistencia offline.");
+    } else {
+      console.error("Error al habilitar la persistencia:", err);
+    }
+  });
 
-export { appfirebase, db, auth }; 
+export { appfirebase, db, auth, storage };
