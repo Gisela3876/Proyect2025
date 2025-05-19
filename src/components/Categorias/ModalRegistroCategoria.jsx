@@ -89,6 +89,13 @@ const ModalRegistroCategoria = ({
       </Modal.Footer>
     </Modal>
   );
+ 
 };
+
+<col ig={3} md={4} sm={4} xs={5}>
+<button className="mb-3" onClick={()=> setShowChatModal(true)} style={{width: "100%"}}>
+  Chat IA 
+</button>
+</col>
 
 export default ModalRegistroCategoria;
