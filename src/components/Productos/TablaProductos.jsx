@@ -12,6 +12,20 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
     );
   }
 
+  const handleCopy = (producto) => {
+    const rowData = `Nombre: ${producto.nombreProducto}\nPrecio: C$${producto.precio}\nCategoría: ${producto.categoria}`;
+
+    navigator.clipboard
+      .writeText(rowData)
+      .then(() => {
+        console.log("Datos de la fila copiados al portapapeles:\n" + rowData);
+        alert("Datos del producto copiados al portapapeles.");
+      })
+      .catch((err) => {
+        console.error("Error al copiar al portapapeles:", err);
+      });
+  };
+
   return (
     <Table striped bordered hover responsive>
       <thead>
@@ -27,17 +41,19 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
         {productos.map((producto) => (
           <tr key={producto.id}>
             <td>
-              {producto.imagen && (
+              {producto.imagen ? (
                 <img
                   src={producto.imagen}
                   alt={producto.nombreProducto}
                   style={{ width: "50px", height: "50px", objectFit: "cover" }}
                 />
+              ) : (
+                <span>Sin imagen</span>
               )}
             </td>
-            <td>{producto.nombreProducto}</td>
-            <td>${producto.precio}</td>
-            <td>{producto.categoria}</td>
+            <td>{producto.nombreProducto || "Sin nombre"}</td>
+            <td>C${producto.precio || "0"}</td>
+            <td>{producto.categoria || "Sin categoría"}</td>
             <td>
               <Button
                 variant="outline-warning"
@@ -50,9 +66,17 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
               <Button
                 variant="outline-danger"
                 size="sm"
+                className="me-2"
                 onClick={() => openDeleteModal(producto)}
               >
                 <i className="bi bi-trash"></i>
+              </Button>
+              <Button
+                variant="outline-info"
+                size="sm"
+                onClick={() => handleCopy(producto)}
+              >
+                <i className="bi bi-clipboard"></i>
               </Button>
             </td>
           </tr>

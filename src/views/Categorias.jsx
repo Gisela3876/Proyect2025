@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Col } from "react-bootstrap";
 import { db } from "../assets/database/firebaseconfig";
 import {
   collection,
@@ -19,6 +19,7 @@ import { useAuth } from "../assets/database/authcontext";
 import { useNavigate } from "react-router-dom";
 import CuadroBusquedas from "../components/Busquedas/CuadroBusquedas";
 import Paginacion from "../components/Ordenamiento/Paginacion";
+import ChatIA from "../components/Chat/ChatIA";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
@@ -35,28 +36,31 @@ const Categorias = () => {
   });
   const [categoriaEditada, setCategoriaEditada] = useState(null);
   const [categoriaAEliminar, setCategoriaAEliminar] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [loading, setLoading] = useState(true); // Added loading state
+  const [error, setError] = useState(null); // Added error state
 
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [showChatModal, setShowChatModal] = useState(false);
 
   // Detectar conexión/desconexión
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, "categorias"));
       const categoriasData = querySnapshot.docs.map((doc) => ({
@@ -66,8 +70,12 @@ const Categorias = () => {
       console.log("Categorías cargadas:", categoriasData);
       setCategorias(categoriasData);
       setFilteredCategorias(categoriasData);
+      setError(null);
     } catch (error) {
       console.error("Error al obtener categorías:", error);
+      setError("No se pudieron cargar las categorías. Por favor, intenta de nuevo más tarde.");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -83,8 +91,8 @@ const Categorias = () => {
     } else {
       const filtered = categorias.filter(
         (categoria) =>
-          categoria.nombreCategoria.toLowerCase().includes(term) ||
-          categoria.descripcionCategoria.toLowerCase().includes(term)
+          categoria.nombreCategoria?.toLowerCase().includes(term) ||
+          categoria.descripcionCategoria?.toLowerCase().includes(term)
       );
       setFilteredCategorias(filtered);
     }
@@ -194,6 +202,16 @@ const Categorias = () => {
           </Button>
         </div>
 
+        <Col lg={3} md={4} sm={4} xs={5}>
+          <Button
+            className="mb-3"
+            onClick={() => setShowChatModal(true)}
+            style={{ width: "100%" }}
+          >
+            Chat IA
+          </Button>
+        </Col>
+
         <CuadroBusquedas
           searchText={searchTerm}
           handleSearchChange={handleSearchChange}
@@ -206,11 +224,27 @@ const Categorias = () => {
           </div>
         )}
 
-        <TablaCategorias
-          categorias={currentCategorias}
-          openEditModal={handleOpenEditModal}
-          openDeleteModal={handleOpenDeleteModal}
-        />
+        {error && (
+          <div className="alert alert-danger text-center" role="alert">
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="text-center">
+            <p>Cargando categorías...</p>
+          </div>
+        ) : currentCategorias.length === 0 ? (
+          <div className="text-center">
+            <p>No hay categorías disponibles.</p>
+          </div>
+        ) : (
+          <TablaCategorias
+            categorias={currentCategorias}
+            openEditModal={handleOpenEditModal}
+            openDeleteModal={handleOpenDeleteModal}
+          />
+        )}
 
         <Paginacion
           itemsPerPage={itemsPerPage}
@@ -244,6 +278,11 @@ const Categorias = () => {
 
         <AnimacionRegistro show={showAnimacionRegistro} />
         <AnimacionEliminacion show={showAnimacionEliminacion} />
+
+        <ChatIA
+          showChatModal={showChatModal}
+          setShowChatModal={setShowChatModal}
+        />
       </Container>
     </>
   );
