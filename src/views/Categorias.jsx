@@ -19,7 +19,7 @@ import { useAuth } from "../assets/database/authcontext";
 import { useNavigate } from "react-router-dom";
 import CuadroBusquedas from "../components/Busquedas/CuadroBusquedas";
 import Paginacion from "../components/Ordenamiento/Paginacion";
-import ChatIA from "../components/Chat/ChatIA";
+import ChatIA from "../components/ChatIA/ChatIA";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
