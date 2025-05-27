@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
+const TablaProductos = ({ productos, openEditModal, openDeleteModal, generarPDFDetalleProducto }) => {
   if (!productos || productos.length === 0) {
     return (
       <div className="text-center py-4">
@@ -13,7 +13,7 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
   }
 
   const handleCopy = (producto) => {
-    const rowData = `Nombre: ${producto.nombreProducto}\nPrecio: C$${producto.precio}\nCategoría: ${producto.categoria}`;
+    const rowData = `Nombre: ${producto.nombreProducto}\nPrecio: C$${parseFloat(producto.precio).toFixed(2)}\nCategoría: ${producto.categoria}`;
 
     navigator.clipboard
       .writeText(rowData)
@@ -23,6 +23,7 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
       })
       .catch((err) => {
         console.error("Error al copiar al portapapeles:", err);
+        alert("Error al copiar al portapapeles. Por favor, intenta de nuevo.");
       });
   };
 
@@ -52,7 +53,7 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
               )}
             </td>
             <td>{producto.nombreProducto || "Sin nombre"}</td>
-            <td>C${producto.precio || "0"}</td>
+            <td>C${parseFloat(producto.precio || 0).toFixed(2)}</td>
             <td>{producto.categoria || "Sin categoría"}</td>
             <td>
               <Button
@@ -74,9 +75,24 @@ const TablaProductos = ({ productos, openEditModal, openDeleteModal }) => {
               <Button
                 variant="outline-info"
                 size="sm"
+                className="me-2"
                 onClick={() => handleCopy(producto)}
               >
                 <i className="bi bi-clipboard"></i>
+              </Button>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => {
+                  if (generarPDFDetalleProducto) {
+                    generarPDFDetalleProducto(producto);
+                  } else {
+                    console.error("generarPDFDetalleProducto no está definido");
+                    alert("Función para generar PDF no disponible.");
+                  }
+                }}
+              >
+                <i className="bi bi-file-earmark-pdf"></i>
               </Button>
             </td>
           </tr>

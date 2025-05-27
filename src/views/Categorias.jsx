@@ -19,7 +19,7 @@ import { useAuth } from "../assets/database/authcontext";
 import { useNavigate } from "react-router-dom";
 import CuadroBusquedas from "../components/Busquedas/CuadroBusquedas";
 import Paginacion from "../components/Ordenamiento/Paginacion";
-import ChatIA from "../components/ChatIA/ChatIA";
+import ChatIA from "../components/Chat/ChatIA";
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
@@ -200,7 +200,7 @@ const Categorias = () => {
           <Button variant="primary" onClick={() => setShowModal(true)}>
             Agregar Categoría
           </Button>
-        </div>
+        
 
         <Col lg={3} md={4} sm={4} xs={5}>
           <Button
@@ -217,6 +217,8 @@ const Categorias = () => {
           handleSearchChange={handleSearchChange}
           placeholder="Buscar categoría..."
         />
+        
+        </div>
 
         {isOffline && (
           <div className="alert alert-warning text-center" role="alert">
