@@ -30,7 +30,8 @@ const Productos = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showAnimacionEliminacion, setShowAnimacionEliminacion] = useState(false);
+  const [showAnimacionEliminacion, setShowAnimacionEliminacion] =
+    useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -219,7 +220,9 @@ const Productos = () => {
   useEffect(() => {
     const filtered = searchTerm.trim()
       ? productos.filter((producto) =>
-          producto.nombreProducto.toLowerCase().includes(searchTerm.toLowerCase())
+          producto.nombreProducto
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
         )
       : productos;
     setFilteredProductos(filtered);
@@ -243,10 +246,12 @@ const Productos = () => {
 
     const doc = new jsPDF();
     doc.setFillColor(28, 41, 51);
-    doc.rect(0, 0, 210, 30, 'F');
+    doc.rect(0, 0, 210, 30, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
-    doc.text("Lista de Productos", doc.internal.pageSize.width / 2, 18, { align: "center" });
+    doc.text("Lista de Productos", doc.internal.pageSize.width / 2, 18, {
+      align: "center",
+    });
 
     const columns = ["#", "Nombre", "Precio", "Categoría"];
     const filas = filteredProductos.map((producto, index) => [
@@ -278,13 +283,15 @@ const Productos = () => {
         const pageNumber = doc.internal.getNumberOfPages();
         doc.setFontSize(10);
         doc.setTextColor(0, 0, 0);
-        doc.text(`Página ${pageNumber}`, pageWidth / 2, pageHeight - 10, { align: "center" });
+        doc.text(`Página ${pageNumber}`, pageWidth / 2, pageHeight - 10, {
+          align: "center",
+        });
       },
     });
 
     const fecha = new Date();
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
     const anio = fecha.getFullYear();
     const nombreArchivo = `productos_${dia}-${mes}-${anio}.pdf`;
 
@@ -307,17 +314,22 @@ const Productos = () => {
 
       const hoja = XLSX.utils.json_to_sheet(datos);
       const libro = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(libro, hoja, 'Productos');
+      XLSX.utils.book_append_sheet(libro, hoja, "Productos");
 
-      const excelBuffer = XLSX.write(libro, { bookType: 'xlsx', type: 'array' });
+      const excelBuffer = XLSX.write(libro, {
+        bookType: "xlsx",
+        type: "array",
+      });
 
       const fecha = new Date();
-      const dia = String(fecha.getDate()).padStart(2, '0');
-      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const dia = String(fecha.getDate()).padStart(2, "0");
+      const mes = String(fecha.getMonth() + 1).padStart(2, "0");
       const anio = fecha.getFullYear();
       const nombreArchivo = `productos_${dia}-${mes}-${anio}.xlsx`;
 
-      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
       saveAs(blob, nombreArchivo);
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
@@ -331,10 +343,15 @@ const Productos = () => {
 
       // Encabezado
       pdf.setFillColor(28, 41, 51);
-      pdf.rect(0, 0, 210, 30, 'F');
+      pdf.rect(0, 0, 210, 30, "F");
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(22);
-      pdf.text(producto.nombreProducto, pdf.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+      pdf.text(
+        producto.nombreProducto,
+        pdf.internal.pageSize.getWidth() / 2,
+        18,
+        { align: "center" }
+      );
 
       // Imagen centrada (si existe)
       if (producto.imagen) {
@@ -342,35 +359,75 @@ const Productos = () => {
           const propiedadesImagen = pdf.getImageProperties(producto.imagen);
           const anchoPagina = pdf.internal.pageSize.getWidth();
           const anchoImagen = 60;
-          const altoImagen = (propiedadesImagen.height * anchoImagen) / propiedadesImagen.width;
+          const altoImagen =
+            (propiedadesImagen.height * anchoImagen) / propiedadesImagen.width;
           const posicionX = (anchoPagina - anchoImagen) / 2;
-          pdf.addImage(producto.imagen, 'JPEG', posicionX, 40, anchoImagen, altoImagen);
+          pdf.addImage(
+            producto.imagen,
+            "JPEG",
+            posicionX,
+            40,
+            anchoImagen,
+            altoImagen
+          );
           // Ajustar posición Y para el texto debajo de la imagen
           const posicionY = 40 + altoImagen + 10;
           pdf.setTextColor(0, 0, 0);
           pdf.setFontSize(14);
-          pdf.text(`Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`, anchoPagina / 2, posicionY, { align: "center" });
-          pdf.text(`Categoría: ${producto.categoria}`, anchoPagina / 2, posicionY + 10, { align: "center" });
+          pdf.text(
+            `Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`,
+            anchoPagina / 2,
+            posicionY,
+            { align: "center" }
+          );
+          pdf.text(
+            `Categoría: ${producto.categoria}`,
+            anchoPagina / 2,
+            posicionY + 10,
+            { align: "center" }
+          );
         } catch (error) {
           console.error("Error al cargar la imagen en el PDF:", error);
           // Si hay un error con la imagen, mostrar los datos sin ella
           pdf.setTextColor(0, 0, 0);
           pdf.setFontSize(14);
-          pdf.text(`Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`, pdf.internal.pageSize.getWidth() / 2, 50, { align: "center" });
-          pdf.text(`Categoría: ${producto.categoria}`, pdf.internal.pageSize.getWidth() / 2, 60, { align: "center" });
+          pdf.text(
+            `Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`,
+            pdf.internal.pageSize.getWidth() / 2,
+            50,
+            { align: "center" }
+          );
+          pdf.text(
+            `Categoría: ${producto.categoria}`,
+            pdf.internal.pageSize.getWidth() / 2,
+            60,
+            { align: "center" }
+          );
         }
       } else {
         // Si no hay imagen, mostrar los datos más arriba
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(14);
-        pdf.text(`Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`, pdf.internal.pageSize.getWidth() / 2, 50, { align: "center" });
-        pdf.text(`Categoría: ${producto.categoria}`, pdf.internal.pageSize.getWidth() / 2, 60, { align: "center" });
+        pdf.text(
+          `Precio: C$ ${parseFloat(producto.precio).toFixed(2)}`,
+          pdf.internal.pageSize.getWidth() / 2,
+          50,
+          { align: "center" }
+        );
+        pdf.text(
+          `Categoría: ${producto.categoria}`,
+          pdf.internal.pageSize.getWidth() / 2,
+          60,
+          { align: "center" }
+        );
       }
 
       pdf.save(`${producto.nombreProducto}.pdf`);
     } catch (error) {
       console.error("Error al generar el PDF del producto:", error);
-      alert("Error al generar el PDF del producto. Por favor, intenta de nuevo.");
+      alert(
+        "Error al generar el PDF del producto. Por favor, intenta de nuevo."
+      );
     }
   };
 
@@ -387,7 +444,7 @@ const Productos = () => {
         )}
         <Col lg={3} md={4} sm={4} xs={5}>
           <Button
-            className="mb-3"
+            className="me-2"
             onClick={generarReportePDF}
             variant="success"
             style={{ width: "100%" }}
@@ -397,7 +454,7 @@ const Productos = () => {
         </Col>
         <Col lg={3} md={4} sm={4} xs={5}>
           <Button
-            className="mb-3"
+            className="me-2"
             onClick={exportarExcelProductos}
             variant="success"
             style={{ width: "100%" }}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Button, Col } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap"; // Asegúrate de importar Row
 import { db } from "../assets/database/firebaseconfig";
 import {
   collection,
@@ -39,8 +39,8 @@ const Categorias = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const [loading, setLoading] = useState(true); // Added loading state
-  const [error, setError] = useState(null); // Added error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -73,7 +73,9 @@ const Categorias = () => {
       setError(null);
     } catch (error) {
       console.error("Error al obtener categorías:", error);
-      setError("No se pudieron cargar las categorías. Por favor, intenta de nuevo más tarde.");
+      setError(
+        "No se pudieron cargar las categorías. Por favor, intenta de nuevo más tarde."
+      );
     } finally {
       setLoading(false);
     }
@@ -104,7 +106,10 @@ const Categorias = () => {
       navigate("/login");
       return;
     }
-    if (!nuevaCategoria.nombreCategoria || !nuevaCategoria.descripcionCategoria) {
+    if (
+      !nuevaCategoria.nombreCategoria ||
+      !nuevaCategoria.descripcionCategoria
+    ) {
       alert("Por favor, completa todos los campos.");
       return;
     }
@@ -132,7 +137,10 @@ const Categorias = () => {
       alert("No hay una categoría seleccionada para editar.");
       return;
     }
-    if (!categoriaEditada.nombreCategoria || !categoriaEditada.descripcionCategoria) {
+    if (
+      !categoriaEditada.nombreCategoria ||
+      !categoriaEditada.descripcionCategoria
+    ) {
       alert("Completa todos los campos.");
       return;
     }
@@ -190,35 +198,40 @@ const Categorias = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCategorias = filteredCategorias.slice(indexOfFirstItem, indexOfLastItem);
+  const currentCategorias = filteredCategorias.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <>
-      <Container className="mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>Categorías</h2>
-          <Button variant="primary" onClick={() => setShowModal(true)}>
-            Agregar Categoría
-          </Button>
-        
-
-        <Col lg={3} md={4} sm={4} xs={5}>
-          <Button
-            className="mb-3"
-            onClick={() => setShowChatModal(true)}
-            style={{ width: "100%" }}
-          >
-            Chat IA
-          </Button>
-        </Col>
+      <Container className="mt-5 margen-superior-main contenido-vista">
+        <Row className="align-items-center mb-4">
+          <Col xs={12} md={6} lg={4}>
+            <h2 className="mb-0">Categorías</h2>
+          </Col>
+          <Col xs={12} md={6} lg={8} className="d-flex justify-content-end flex-wrap gap-2">
+            {isLoggedIn && (
+              <Button variant="primary" onClick={() => setShowModal(true)}>
+                <i className="bi bi-plus-circle me-2"></i>
+                Agregar Categoría
+              </Button>
+            )}
+            <Button
+              variant="success"
+              onClick={() => setShowChatModal(true)}
+              style={{ minWidth: "150px" }}
+            >
+              Chat IA
+            </Button>
+          </Col>
+        </Row>
 
         <CuadroBusquedas
           searchText={searchTerm}
           handleSearchChange={handleSearchChange}
           placeholder="Buscar categoría..."
         />
-        
-        </div>
 
         {isOffline && (
           <div className="alert alert-warning text-center" role="alert">
@@ -241,11 +254,13 @@ const Categorias = () => {
             <p>No hay categorías disponibles.</p>
           </div>
         ) : (
-          <TablaCategorias
-            categorias={currentCategorias}
-            openEditModal={handleOpenEditModal}
-            openDeleteModal={handleOpenDeleteModal}
-          />
+          <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
+            <TablaCategorias
+              categorias={currentCategorias}
+              openEditModal={handleOpenEditModal}
+              openDeleteModal={handleOpenDeleteModal}
+            />
+          </div>
         )}
 
         <Paginacion
